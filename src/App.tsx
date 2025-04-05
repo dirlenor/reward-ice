@@ -300,7 +300,7 @@ function App() {
                 fontSize: '33px',
                 letterSpacing: '-0.05em',
                 color: '#000000',
-                marginTop: '16px'
+                marginTop: '-4px'
               }}
             >
               สะสมแต้ม
