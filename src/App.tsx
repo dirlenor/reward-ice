@@ -284,8 +284,8 @@ function App() {
               src={iceLogo}
               alt="Logo"
               sx={{
-                width: 80,
-                height: 80,
+                width: 120,
+                height: 120,
                 objectFit: 'cover',
                 borderRadius: '50%',
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)',
