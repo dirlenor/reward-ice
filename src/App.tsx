@@ -19,7 +19,6 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import { supabase } from './lib/supabase.ts';
-import iceLogo from './assets/icelogo.png';
 
 const theme = createTheme({
   typography: {
@@ -255,7 +254,7 @@ function App() {
             {/* Logo */}
             <Box
               component="img"
-              src={iceLogo}
+              src="/reward-ice/images/icelogo.png"
               alt="Logo"
               sx={{
                 width: 150,
