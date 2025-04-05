@@ -241,15 +241,41 @@ function App() {
           flexDirection: 'column',
           background: theme.palette.background.default,
           py: 6,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflow: 'auto',
+          '@media (max-width: 600px)': {
+            py: 0,
+            minHeight: '100dvh', // dynamic viewport height
+          }
         }}
       >
-        <Container maxWidth="sm" sx={{ px: 4 }}>
+        <Container 
+          maxWidth="sm" 
+          sx={{ 
+            px: 4,
+            '@media (max-width: 600px)': {
+              px: 3,
+              py: 4,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column'
+            }
+          }}
+        >
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
               gap: 4,
               alignItems: 'center',
+              '@media (max-width: 600px)': {
+                flex: 1,
+                justifyContent: 'space-between'
+              }
             }}
           >
             {/* Logo */}
