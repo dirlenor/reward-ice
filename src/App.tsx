@@ -8,21 +8,17 @@ import {
   Container,
   TextField,
   Button,
-  Paper,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   CircularProgress,
   Snackbar,
-  Alert,
-  IconButton
+  Alert
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import { supabase } from './lib/supabase';
+import LocalCafeIcon from '@mui/icons-material/LocalCafe';
+import { supabase } from './lib/supabase.ts';
 
 const theme = createTheme({
   typography: {
