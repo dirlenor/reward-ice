@@ -19,6 +19,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import { supabase } from './lib/supabase.ts';
+import iceLogo from './assets/icelogo.png';
 
 const theme = createTheme({
   typography: {
@@ -254,11 +255,11 @@ function App() {
             {/* Logo */}
             <Box
               component="img"
-              src="dist/images/icelogo.png"
+              src={iceLogo}
               alt="Logo"
               sx={{
-                width: 150,
-                height: 150,
+                width: 80,
+                height: 80,
                 objectFit: 'cover',
                 borderRadius: '50%',
                 boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.1)',
@@ -273,6 +274,7 @@ function App() {
                 fontSize: '33px',
                 letterSpacing: '-0.05em',
                 color: '#000000',
+                marginTop: '16px'
               }}
             >
               สะสมแต้ม
@@ -299,6 +301,10 @@ function App() {
                 inputProps={{
                   maxLength: 10,
                   pattern: '[0-9]*',
+                  style: {
+                    fontSize: '32px',
+                    padding: '12px 16px',
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
