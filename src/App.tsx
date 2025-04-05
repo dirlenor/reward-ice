@@ -14,10 +14,12 @@ import {
   DialogActions,
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
+  Grid
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
+import SearchIcon from '@mui/icons-material/Search';
 import { supabase } from './lib/supabase.ts';
 import iceLogo from './assets/icelogo.png';
 
@@ -109,6 +111,8 @@ function App() {
   const [message, setMessage] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [openManual, setOpenManual] = useState(false);
+  const [openAddPointsDialog, setOpenAddPointsDialog] = useState(false);
+  const [addedPoints, setAddedPoints] = useState(0);
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -150,15 +154,16 @@ function App() {
     }
   };
 
-  const handleAddPoint = async () => {
-    if (phoneNumber.length !== 10) {
-      setMessage('กรุณากรอกเบอร์มือถือให้ครบ 10 หลัก');
+  const handleAddPoints = async (points: number) => {
+    if (!phoneNumber || phoneNumber.length !== 10) {
+      setMessage('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง');
       setShowSnackbar(true);
       return;
     }
+
     setLoading(true);
     try {
-      const { data: existingRecord, error: fetchError } = await supabase
+      const { data: existingPoints, error: fetchError } = await supabase
         .from('points')
         .select('points')
         .eq('phone_number', phoneNumber)
@@ -168,33 +173,34 @@ function App() {
         throw fetchError;
       }
 
-      if (existingRecord) {
+      if (existingPoints) {
         const { error: updateError } = await supabase
           .from('points')
           .update({ 
-            points: existingRecord.points + 1,
+            points: existingPoints.points + points,
             updated_at: new Date().toISOString()
           })
           .eq('phone_number', phoneNumber);
 
         if (updateError) throw updateError;
-        setPoints(existingRecord.points + 1);
+        setPoints(existingPoints.points + points);
       } else {
         const { error: insertError } = await supabase
           .from('points')
           .insert([{ 
             phone_number: phoneNumber,
-            points: 1
+            points: points
           }]);
 
         if (insertError) throw insertError;
-        setPoints(1);
+        setPoints(points);
       }
-      setOpenDialog(true);
-      setPhoneNumber('');
+
+      setAddedPoints(points);
+      setOpenAddPointsDialog(true);
     } catch (error) {
-      console.error('Error:', error);
-      setMessage('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      console.error('Error adding points:', error);
+      setMessage('เกิดข้อผิดพลาดในการเพิ่มแต้ม');
       setShowSnackbar(true);
     } finally {
       setLoading(false);
@@ -354,23 +360,61 @@ function App() {
 
             {/* Buttons */}
             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              {/* ปุ่มค้นหา */}
               <Button
-                fullWidth
-                className="search-button"
+                startIcon={<SearchIcon />}
                 onClick={handleCheckPoints}
+                className="search-button"
                 disabled={loading}
+                fullWidth
+                sx={{ mb: 2 }}
               >
                 {loading ? <CircularProgress size={24} /> : 'ค้นหา'}
               </Button>
 
-              <Button
-                fullWidth
-                className="collect-button"
-                onClick={handleAddPoint}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : 'เพิ่มแต้ม'}
-              </Button>
+              {/* Grid ปุ่มเพิ่มแต้ม */}
+              <Grid container spacing={1} sx={{ mb: 2 }}>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
+                  <Grid item xs={4} key={number}>
+                    <Button
+                      variant="contained"
+                      onClick={() => handleAddPoints(number)}
+                      disabled={loading}
+                      fullWidth
+                      sx={{
+                        height: '48px',
+                        fontSize: '1.2rem',
+                        backgroundColor: '#FF0000',
+                        color: '#FFFFFF',
+                        '&:hover': {
+                          backgroundColor: '#CC0000',
+                        },
+                      }}
+                    >
+                      +{number}
+                    </Button>
+                  </Grid>
+                ))}
+                <Grid item xs={4} sx={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleAddPoints(10)}
+                    disabled={loading}
+                    fullWidth
+                    sx={{
+                      height: '48px',
+                      fontSize: '1.2rem',
+                      backgroundColor: '#FF0000',
+                      color: '#FFFFFF',
+                      '&:hover': {
+                        backgroundColor: '#CC0000',
+                      },
+                    }}
+                  >
+                    +10
+                  </Button>
+                </Grid>
+              </Grid>
 
               <Button
                 fullWidth
@@ -440,6 +484,45 @@ function App() {
               </Button>
             )}
             <Button onClick={() => setOpenDialog(false)} sx={{ color: '#000000' }}>ปิด</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Dialog แสดงผลการเพิ่มแต้ม */}
+        <Dialog 
+          open={openAddPointsDialog} 
+          onClose={() => setOpenAddPointsDialog(false)}
+        >
+          <DialogTitle sx={{ textAlign: 'center' }}>เพิ่มแต้มสำเร็จ</DialogTitle>
+          <DialogContent>
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="h4" sx={{ color: '#FF0000', mb: 2 }}>
+                +{addedPoints} แต้ม
+              </Typography>
+              <Typography variant="body1">
+                คุณได้เพิ่มแต้มให้กับเบอร์ {phoneNumber}
+              </Typography>
+              <Typography variant="h5" sx={{ mt: 2, color: '#000' }}>
+                รวมแต้มทั้งหมด: {points} แต้ม
+              </Typography>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+            <Button 
+              onClick={() => {
+                setOpenAddPointsDialog(false);
+                setPhoneNumber('');
+              }} 
+              variant="contained"
+              sx={{ 
+                backgroundColor: '#FF0000',
+                color: '#FFFFFF',
+                '&:hover': {
+                  backgroundColor: '#CC0000'
+                }
+              }}
+            >
+              ตกลง
+            </Button>
           </DialogActions>
         </Dialog>
 
