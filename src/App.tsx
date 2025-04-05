@@ -108,6 +108,7 @@ function App() {
   const [openDialog, setOpenDialog] = useState(false);
   const [message, setMessage] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [openManual, setOpenManual] = useState(false);
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
@@ -228,6 +229,13 @@ function App() {
       setShowSnackbar(true);
       setLoading(false);
     }
+  };
+
+  const handleClearData = () => {
+    setPhoneNumber('');
+    setPoints(null);
+    setShowSnackbar(true);
+    setMessage('ข้อมูลถูกลบออกจากระบบ');
   };
 
   return (
@@ -367,12 +375,33 @@ function App() {
               <Button
                 fullWidth
                 className="clear-button"
-                onClick={() => setPhoneNumber('')}
+                onClick={handleClearData}
                 disabled={loading}
-                startIcon={<DeleteIcon sx={{ fontSize: 24 }} />}
+                startIcon={<DeleteIcon />}
               >
                 ล้างข้อมูล
               </Button>
+
+              {/* Manual Link */}
+              <Box sx={{ mt: 2, textAlign: 'center' }}>
+                <Typography
+                  component="pre"
+                  sx={{
+                    fontSize: '14px',
+                    whiteSpace: 'pre-wrap',
+                    fontFamily: 'inherit',
+                    color: '#666666',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                    '&:hover': {
+                      color: '#000000'
+                    }
+                  }}
+                  onClick={() => setOpenManual(true)}
+                >
+                  คู่มือการใช้งาน
+                </Typography>
+              </Box>
             </Box>
 
             {/* Footer */}
@@ -424,6 +453,60 @@ function App() {
               </Button>
             )}
             <Button onClick={() => setOpenDialog(false)} sx={{ color: '#000000' }}>ปิด</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Manual Dialog */}
+        <Dialog
+          open={openManual}
+          onClose={() => setOpenManual(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>คู่มือการใช้งานแอพสะสมแต้ม Ice-T</DialogTitle>
+          <DialogContent>
+            <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'inherit' }}>
+{`1. การเข้าใช้งานแอพ
+   - เข้าใช้งานผ่านลิงก์: https://dirlenor.github.io/reward-ice/
+   - แอพสามารถใช้งานได้ทั้งบนคอมพิวเตอร์และมือถือ
+   - แนะนำให้ใช้งานบนมือถือเพื่อการใช้งานที่สะดวกที่สุด
+
+2. การสะสมแต้ม
+   - กรอกเบอร์โทรศัพท์ของลูกค้า (10 หลัก)
+   - กดปุ่ม "เพิ่มแต้ม" เพื่อเพิ่มแต้มให้ลูกค้า 1 แต้ม
+   - ระบบจะแสดงข้อความยืนยันการเพิ่มแต้มสำเร็จ
+   - หากเป็นลูกค้าใหม่ ระบบจะสร้างบัญชีใหม่ให้อัตโนมัติ
+
+3. การเช็คแต้มสะสม
+   - กรอกเบอร์โทรศัพท์ของลูกค้า (10 หลัก)
+   - กดปุ่ม "ค้นหา" เพื่อดูจำนวนแต้มสะสมของลูกค้า
+   - ระบบจะแสดงจำนวนแต้มสะสมทั้งหมด
+   - หากไม่พบข้อมูล ระบบจะแสดง 0 แต้ม
+
+4. การลบข้อมูล
+   - กรอกเบอร์โทรศัพท์ของลูกค้า (10 หลัก)
+   - กดปุ่ม "ล้างข้อมูล" เพื่อลบข้อมูลแต้มสะสมของลูกค้า
+   - ระบบจะแสดงข้อความยืนยันก่อนการลบข้อมูล
+   - เมื่อยืนยันแล้ว ข้อมูลจะถูกลบออกจากระบบทั้งหมด
+
+5. ข้อควรระวัง
+   - ตรวจสอบเบอร์โทรศัพท์ให้ถูกต้องก่อนทำรายการ
+   - การลบข้อมูลไม่สามารถเรียกคืนได้
+   - หากพบปัญหาการใช้งาน กรุณาติดต่อผู้ดูแลระบบ
+
+6. คำแนะนำเพิ่มเติม
+   - ควรตรวจสอบยอดแต้มให้ลูกค้าทุกครั้งหลังทำรายการ
+   - เก็บข้อมูลการทำรายการไว้เป็นหลักฐาน
+   - ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตก่อนใช้งาน
+
+7. การติดต่อสอบถาม
+   หากพบปัญหาในการใช้งานหรือต้องการสอบถามข้อมูลเพิ่มเติม
+   สามารถติดต่อผู้ดูแลระบบได้ที่:
+   - Line: asianpark`}
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenManual(false)}>ปิด</Button>
           </DialogActions>
         </Dialog>
 
