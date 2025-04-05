@@ -254,7 +254,7 @@ function App() {
             {/* Logo */}
             <Box
               component="img"
-              src="/images/icelogo.png"
+              src="./images/icelogo.png"
               alt="Logo"
               sx={{
                 width: 150,
