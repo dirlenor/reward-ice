@@ -254,7 +254,7 @@ function App() {
             {/* Logo */}
             <Box
               component="img"
-              src={import.meta.env.BASE_URL + 'images/icelogo.png'}
+              src="dist/images/icelogo.png"
               alt="Logo"
               sx={{
                 width: 150,
