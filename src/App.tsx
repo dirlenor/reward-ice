@@ -403,19 +403,6 @@ function App() {
                 </Typography>
               </Box>
             </Box>
-
-            {/* Footer */}
-            <Typography
-              sx={{
-                fontSize: '10px',
-                letterSpacing: '0.06em',
-                color: '#000000',
-                mt: 4,
-                opacity: 0.5,
-              }}
-            >
-              Design by sixcat
-            </Typography>
           </Box>
         </Container>
 
